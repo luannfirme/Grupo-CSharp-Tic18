@@ -4,5 +4,6 @@
     Mikaelle Rubia Pinheiro Sousa
     Luann Firme
     Bian Lima
-    Erika Ravanna Marcos Vinícius
+    Erika Ravanna 
+    Marcos Vinícius
     Murilo Novais
