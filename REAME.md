@@ -1,6 +1,6 @@
 ## Pratica 04:
 
-# Equipe:
+### Equipe:
     Mikaelle Rubia Pinheiro Sousa
     Luann Firme
     Bian Lima
