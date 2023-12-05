@@ -10,6 +10,7 @@ public class App
     public static void MenuPrincipal()
     {
         var app = new App();
+        app.Inicializar();
 
         bool sair = false;
 
@@ -63,6 +64,20 @@ public class App
         }
     }
 
+    public void Inicializar(){
+        Medicos.Add(new Medico {Nome = "Pedro Severino", Cpf = "156.168.966-03", DataDeNascimento = new DateTime(1989, 9, 15), Crm = "15699-66" });
+        Medicos.Add(new Medico {Nome = "Maria Laura", Cpf = "155.965.896-02", DataDeNascimento = new DateTime(1992, 12, 08), Crm = "11556-78" });
+        Medicos.Add(new Medico {Nome = "Laerth Filho", Cpf = "326.968.163-45", DataDeNascimento = new DateTime(1994, 11, 24), Crm = "96589-63" });
+
+        Pacientes.Add(new Paciente {Nome = "Luann Firme", Cpf = "155.545.696-77", DataDeNascimento = new DateTime(1992, 12, 19), Sexo = "MASCULINO", Sintomas = new List<string>(){"dor de cabeça","febre" }});
+        Pacientes.Add(new Paciente {Nome = "Théo Bento", Cpf = "222.123.676-96", DataDeNascimento = new DateTime(2020, 12, 15), Sexo = "MASCULINO", Sintomas = new List<string>(){"coriza","febre" }});
+        Pacientes.Add(new Paciente {Nome = "Camila Bento", Cpf = "674.987.057-05", DataDeNascimento = new DateTime(1990, 07, 22), Sexo = "FEMININO", Sintomas = new List<string>(){"enjôo","sonolência" }});
+
+        Exames.Add(new Exame { Titulo = "Ultrassonografia Obstétrica", Valor = float.Parse("149.99"), Descricao = "Ultrassom intra"});
+        Exames.Add(new Exame { Titulo = "Hemograma", Valor = float.Parse("69.99"), Descricao = "Hemograma Completo"});
+        Exames.Add(new Exame { Titulo = "Glicemia", Valor = float.Parse("84.50"), Descricao = "Glicemia em jejum"});
+    }
+
     public static void MenuRelatorios(App app)
     {
         bool sair = false;
@@ -92,44 +107,78 @@ public class App
                     Console.Write("Informe a idade final do médico: ");
                     int medicoFinal = int.Parse(Console.ReadLine());
                     var listaMedicos = app.Medicos.Where(p => p.DataDeNascimento >= DateTime.Today.AddYears(-medicoInicial) && p.DataDeNascimento <= DateTime.Today.AddYears(-medicoFinal)).ToList();
-                    Console.Write("\nPressione qualquer tecla para continuar...");
-                    Console.ReadKey();
+                    if (listaMedicos.Any())
+                    {
+                        foreach (var medico in listaMedicos)
+                            Console.WriteLine($"Paciente: {medico.Nome}       Data de Nascimento: {medico.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {medico.Cpf}     CRM: {medico.Crm}");
+
+                        Console.Write("\nPressione qualquer tecla para continuar...");
+                        Console.ReadKey();
+                    }
                     break;
                 case "2":
                     Console.Write("Informe a idade incial do paciente: ");
                     int pacienteInicial = int.Parse(Console.ReadLine());
                     Console.Write("Informe a idade final do paciente: ");
                     int pacienteFinal = int.Parse(Console.ReadLine());
-                    app.obterPacientesIntevaloIdade(pacienteInicial, pacienteFinal);
-                    Console.Write("\nPressione qualquer tecla para continuar...");
-                    Console.ReadKey();
-                    break;
-                case "3":
-                        Console.Write("Informe o sexo do paciente: ");
-                        string sexo = Console.ReadLine();
-                        app.obterPacientesPorSexo(sexo);
+                    var listaPaciente = app.Pacientes.Where(p => p.DataDeNascimento >= DateTime.Today.AddYears(-pacienteInicial) && p.DataDeNascimento <= DateTime.Today.AddYears(-pacienteFinal)).ToList();
+                    if (listaPaciente.Any())
+                    {
+                        foreach (var paciente in listaPaciente)
+                            Console.WriteLine($"Paciente: {paciente.Nome}       Data de Nascimento: {paciente.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {paciente.Cpf}     Sexo: {paciente.Sexo}        Sintoma: {String.Join(", ", paciente.Sintomas)}");
+
                         Console.Write("\nPressione qualquer tecla para continuar...");
                         Console.ReadKey();
-                        break;
+                    }
+                    break;
+                case "3":
+                    Console.Write("Informe o sexo do paciente: ");
+                    string sexo = Console.ReadLine();
+                    var listaPacienteSexo = app.Pacientes.Where(p => p.Sexo == sexo.ToUpper()).ToList();
+                    if (listaPacienteSexo.Any())
+                    {
+                        foreach (var paciente in listaPacienteSexo)
+                            Console.WriteLine($"Paciente: {paciente.Nome}       Data de Nascimento: {paciente.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {paciente.Cpf}     Sexo: {paciente.Sexo}        Sintoma: {String.Join(", ", paciente.Sintomas)}");
+
+                        Console.Write("\nPressione qualquer tecla para continuar...");
+                        Console.ReadKey();
+                    }
                     break;
                 case "4":
-                    app.obterPacientesPorOrdemAlfabetica();
+                    var listaPacienteNome = app.Pacientes.OrderBy(p => p.Nome).ToList();
+                    foreach (var paciente in listaPacienteNome)
+                        Console.WriteLine($"Paciente: {paciente.Nome}       Data de Nascimento: {paciente.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {paciente.Cpf}     Sexo: {paciente.Sexo}        Sintoma: {String.Join(", ", paciente.Sintomas)}");
+
                     Console.Write("\nPressione qualquer tecla para continuar...");
                     Console.ReadKey();
                     break;
                 case "5":
                     Console.Write("Informe o Sintoma que deseja buscar: ");
                     string sintoma = Console.ReadLine();
-                    app.obterPacientesPorSintomas(sintoma);
-                    Console.Write("\nPressione qualquer tecla para continuar...");
-                    Console.ReadKey();
+                    var listaPacienteSintoma = app.Pacientes.Where(p => p.Sintomas.Contains(sintoma)).ToList();
+                    if (listaPacienteSintoma.Any())
+                    {
+                        foreach (var paciente in listaPacienteSintoma)
+                            Console.WriteLine($"Paciente: {paciente.Nome}       Data de Nascimento: {paciente.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {paciente.Cpf}     Sexo: {paciente.Sexo}        Sintoma: {String.Join(", ", paciente.Sintomas)}");
+
+                        Console.Write("\nPressione qualquer tecla para continuar...");
+                        Console.ReadKey();
+                    }
                     break;
                 case "6":
                     Console.Write("Informe o mês de aniversário (entre 1 e 12): ");
                     int mesAniversario = int.Parse(Console.ReadLine());
                     if (mesAniversario >= 1 && mesAniversario <= 12)
                     {
-                        app.obterAniversariantesPorMes(mesAniversario);
+                        var listaPessoas = new List<Pessoa>();
+                        listaPessoas.AddRange(app.Pacientes.Where(p => p.DataDeNascimento.Month == mesAniversario));
+                        listaPessoas.AddRange(app.Medicos.Where(p => p.DataDeNascimento.Month == mesAniversario));
+
+                        listaPessoas.OrderBy(p => p.Nome);
+
+                        foreach (var pessoa in listaPessoas)
+                            Console.WriteLine($"Nome: {pessoa.Nome}       Data de Nascimento: {pessoa.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {pessoa.Cpf}");
+
                         Console.Write("\nPressione qualquer tecla para continuar...");
                         Console.ReadKey();
                     }
@@ -226,7 +275,7 @@ public class App
                 Nome = nome,
                 Cpf = cpf,
                 DataDeNascimento = dataNascimento,
-                Sexo = sexo,
+                Sexo = sexo.ToUpper(),
                 Sintomas = sintomas
             };
 
