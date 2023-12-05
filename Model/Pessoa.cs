@@ -7,7 +7,7 @@ public class Pessoa
     public string Nome { get; set; }
     public DateTime DataDeNascimento { get; set; }
     public string Cpf { get; set; }
-    
+
     public virtual string ValidarCPF(List<string> cpfs)
     {
         if (!Regex.IsMatch(Cpf, @"^\d{3}\.\d{3}\.\d{3}-\d{2}$"))

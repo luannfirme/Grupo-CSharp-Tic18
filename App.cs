@@ -1,5 +1,9 @@
 ﻿namespace ProvaGrupoNET;
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 public class App
 {
     private List<Atendimento> Atendimentos = new List<Atendimento>();
@@ -51,7 +55,7 @@ public class App
                     app.CadastrarExame(); ;
                     break;
                 case "7":
-                    MenuRelatorios(app); ;
+                    Relatorio.MenuRelatorios(app); ;
                     break;
                 case "0":
                     Console.Write("Aplicação encerrada...");
@@ -64,133 +68,19 @@ public class App
         }
     }
 
-    public void Inicializar(){
-        Medicos.Add(new Medico {Nome = "Pedro Severino", Cpf = "156.168.966-03", DataDeNascimento = new DateTime(1989, 9, 15), Crm = "15699-66" });
-        Medicos.Add(new Medico {Nome = "Maria Laura", Cpf = "155.965.896-02", DataDeNascimento = new DateTime(1992, 12, 08), Crm = "11556-78" });
-        Medicos.Add(new Medico {Nome = "Laerth Filho", Cpf = "326.968.163-45", DataDeNascimento = new DateTime(1994, 11, 24), Crm = "96589-63" });
-
-        Pacientes.Add(new Paciente {Nome = "Luann Firme", Cpf = "155.545.696-77", DataDeNascimento = new DateTime(1992, 12, 19), Sexo = "MASCULINO", Sintomas = new List<string>(){"dor de cabeça","febre" }});
-        Pacientes.Add(new Paciente {Nome = "Théo Bento", Cpf = "222.123.676-96", DataDeNascimento = new DateTime(2020, 12, 15), Sexo = "MASCULINO", Sintomas = new List<string>(){"coriza","febre" }});
-        Pacientes.Add(new Paciente {Nome = "Camila Bento", Cpf = "674.987.057-05", DataDeNascimento = new DateTime(1990, 07, 22), Sexo = "FEMININO", Sintomas = new List<string>(){"enjôo","sonolência" }});
-
-        Exames.Add(new Exame { Titulo = "Ultrassonografia Obstétrica", Valor = float.Parse("149.99"), Descricao = "Ultrassom intra"});
-        Exames.Add(new Exame { Titulo = "Hemograma", Valor = float.Parse("69.99"), Descricao = "Hemograma Completo"});
-        Exames.Add(new Exame { Titulo = "Glicemia", Valor = float.Parse("84.50"), Descricao = "Glicemia em jejum"});
-    }
-
-    public static void MenuRelatorios(App app)
+    public void Inicializar()
     {
-        bool sair = false;
-        while (!sair)
-        {
-            Console.WriteLine("");
-            Console.WriteLine("------- RELÓRIOS -------");
-            Console.WriteLine("1. Médicos com idade entre dois valores");
-            Console.WriteLine("2- Pacientes com idade entre dois valores");
-            Console.WriteLine("3- Pacientes do sexo informado pelo usuário");
-            Console.WriteLine("4- Pacientes em ordem alfabética");
-            Console.WriteLine("5- Pacientes cujos sintomas contenha texto informado");
-            Console.WriteLine("6- Médicos e Pacientes aniversariantes do mês informado");
-            Console.WriteLine("7- Atendimentos em aberto");
-            Console.WriteLine("8- Médicos por atendimentos concluídos");
-            Console.WriteLine("9- Atendimento cuja suspeita ou diagnostico contenha texto informado");
-            Console.WriteLine("10- Top 10 atendimentos mais utilizados");
-            Console.WriteLine("0- voltar");
-            Console.Write("Escolha uma opção: ");
-            string escolha = Console.ReadLine();
+        Medicos.Add(new Medico { Nome = "Pedro Severino", Cpf = "156.168.966-03", DataDeNascimento = new DateTime(1989, 9, 15), Crm = "15699-66" });
+        Medicos.Add(new Medico { Nome = "Maria Laura", Cpf = "155.965.896-02", DataDeNascimento = new DateTime(1992, 12, 08), Crm = "11556-78" });
+        Medicos.Add(new Medico { Nome = "Laerth Filho", Cpf = "326.968.163-45", DataDeNascimento = new DateTime(1994, 11, 24), Crm = "96589-63" });
 
-            switch (escolha)
-            {
-                case "1":
-                    Console.Write("Informe a idade incial do médico: ");
-                    int medicoInicial = int.Parse(Console.ReadLine());
-                    Console.Write("Informe a idade final do médico: ");
-                    int medicoFinal = int.Parse(Console.ReadLine());
-                    var listaMedicos = app.Medicos.Where(p => p.DataDeNascimento >= DateTime.Today.AddYears(-medicoInicial) && p.DataDeNascimento <= DateTime.Today.AddYears(-medicoFinal)).ToList();
-                    if (listaMedicos.Any())
-                    {
-                        foreach (var medico in listaMedicos)
-                            Console.WriteLine($"Paciente: {medico.Nome}       Data de Nascimento: {medico.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {medico.Cpf}     CRM: {medico.Crm}");
+        Pacientes.Add(new Paciente { Nome = "Luann Firme", Cpf = "155.545.696-77", DataDeNascimento = new DateTime(1992, 12, 19), Sexo = "MASCULINO", Sintomas = new List<string>() { "dor de cabeça", "febre" } });
+        Pacientes.Add(new Paciente { Nome = "Théo Bento", Cpf = "222.123.676-96", DataDeNascimento = new DateTime(2020, 12, 15), Sexo = "MASCULINO", Sintomas = new List<string>() { "coriza", "febre" } });
+        Pacientes.Add(new Paciente { Nome = "Camila Bento", Cpf = "674.987.057-05", DataDeNascimento = new DateTime(1990, 07, 22), Sexo = "FEMININO", Sintomas = new List<string>() { "enjôo", "sonolência" } });
 
-                        Console.Write("\nPressione qualquer tecla para continuar...");
-                        Console.ReadKey();
-                    }
-                    break;
-                case "2":
-                    Console.Write("Informe a idade incial do paciente: ");
-                    int pacienteInicial = int.Parse(Console.ReadLine());
-                    Console.Write("Informe a idade final do paciente: ");
-                    int pacienteFinal = int.Parse(Console.ReadLine());
-                    var listaPaciente = app.Pacientes.Where(p => p.DataDeNascimento >= DateTime.Today.AddYears(-pacienteInicial) && p.DataDeNascimento <= DateTime.Today.AddYears(-pacienteFinal)).ToList();
-                    if (listaPaciente.Any())
-                    {
-                        foreach (var paciente in listaPaciente)
-                            Console.WriteLine($"Paciente: {paciente.Nome}       Data de Nascimento: {paciente.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {paciente.Cpf}     Sexo: {paciente.Sexo}        Sintoma: {String.Join(", ", paciente.Sintomas)}");
-
-                        Console.Write("\nPressione qualquer tecla para continuar...");
-                        Console.ReadKey();
-                    }
-                    break;
-                case "3":
-                    Console.Write("Informe o sexo do paciente: ");
-                    string sexo = Console.ReadLine();
-                    var listaPacienteSexo = app.Pacientes.Where(p => p.Sexo == sexo.ToUpper()).ToList();
-                    if (listaPacienteSexo.Any())
-                    {
-                        foreach (var paciente in listaPacienteSexo)
-                            Console.WriteLine($"Paciente: {paciente.Nome}       Data de Nascimento: {paciente.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {paciente.Cpf}     Sexo: {paciente.Sexo}        Sintoma: {String.Join(", ", paciente.Sintomas)}");
-
-                        Console.Write("\nPressione qualquer tecla para continuar...");
-                        Console.ReadKey();
-                    }
-                    break;
-                case "4":
-                    var listaPacienteNome = app.Pacientes.OrderBy(p => p.Nome).ToList();
-                    foreach (var paciente in listaPacienteNome)
-                        Console.WriteLine($"Paciente: {paciente.Nome}       Data de Nascimento: {paciente.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {paciente.Cpf}     Sexo: {paciente.Sexo}        Sintoma: {String.Join(", ", paciente.Sintomas)}");
-
-                    Console.Write("\nPressione qualquer tecla para continuar...");
-                    Console.ReadKey();
-                    break;
-                case "5":
-                    Console.Write("Informe o Sintoma que deseja buscar: ");
-                    string sintoma = Console.ReadLine();
-                    var listaPacienteSintoma = app.Pacientes.Where(p => p.Sintomas.Contains(sintoma)).ToList();
-                    if (listaPacienteSintoma.Any())
-                    {
-                        foreach (var paciente in listaPacienteSintoma)
-                            Console.WriteLine($"Paciente: {paciente.Nome}       Data de Nascimento: {paciente.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {paciente.Cpf}     Sexo: {paciente.Sexo}        Sintoma: {String.Join(", ", paciente.Sintomas)}");
-
-                        Console.Write("\nPressione qualquer tecla para continuar...");
-                        Console.ReadKey();
-                    }
-                    break;
-                case "6":
-                    Console.Write("Informe o mês de aniversário (entre 1 e 12): ");
-                    int mesAniversario = int.Parse(Console.ReadLine());
-                    if (mesAniversario >= 1 && mesAniversario <= 12)
-                    {
-                        var listaPessoas = new List<Pessoa>();
-                        listaPessoas.AddRange(app.Pacientes.Where(p => p.DataDeNascimento.Month == mesAniversario));
-                        listaPessoas.AddRange(app.Medicos.Where(p => p.DataDeNascimento.Month == mesAniversario));
-
-                        listaPessoas.OrderBy(p => p.Nome);
-
-                        foreach (var pessoa in listaPessoas)
-                            Console.WriteLine($"Nome: {pessoa.Nome}       Data de Nascimento: {pessoa.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {pessoa.Cpf}");
-
-                        Console.Write("\nPressione qualquer tecla para continuar...");
-                        Console.ReadKey();
-                    }
-                    break;
-                case "0":
-                    sair = true;
-                    break;
-                default:
-                    Console.WriteLine("Opção inválida!");
-                    break;
-            }
-        }
+        Exames.Add(new Exame { Titulo = "Ultrassonografia Obstétrica", Valor = float.Parse("149,99"), Descricao = "Ultrassom intra" });
+        Exames.Add(new Exame { Titulo = "Hemograma", Valor = float.Parse("69,99"), Descricao = "Hemograma Completo" });
+        Exames.Add(new Exame { Titulo = "Glicemia", Valor = float.Parse("84,50"), Descricao = "Glicemia em jejum" });
     }
 
     public void CadastrarMedico()
@@ -460,6 +350,208 @@ public class App
             a.Medico == medico && a.Paciente == paciente && a.Fim == null);
     }
 
+    public void ListarMedicosIntervalo(int inicio, int fim)
+    {
+        try
+        {
+            var listaMedicos = Medicos.Where(p => p.DataDeNascimento <= DateTime.Today.AddYears(-inicio) && p.DataDeNascimento >= DateTime.Today.AddYears(-fim)).ToList();
+
+            if (!listaMedicos.Any())
+                throw new AppException("\nNenhum médico encontrado com esse intervalo.");
+
+            foreach (var medico in listaMedicos)
+                Console.WriteLine($"Médico: {medico.Nome}       Data de Nascimento: {medico.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {medico.Cpf}     CRM: {medico.Crm}");
+        }
+        catch (AppException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return;
+        }
+    }
+
+    public void ListarPacientesIntervalo(int inicio, int fim)
+    {
+        try
+        {
+            var listaPacientes = Pacientes.Where(p => p.DataDeNascimento <= DateTime.Today.AddYears(-inicio) && p.DataDeNascimento >= DateTime.Today.AddYears(-fim)).ToList();
+
+            if (!listaPacientes.Any())
+                throw new AppException("\nNenhum paciente encontrado com esse intervalo.");
+
+            foreach (var paciente in listaPacientes)
+                Console.WriteLine($"Paciente: {paciente.Nome}       Data de Nascimento: {paciente.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {paciente.Cpf}     Sexo: {paciente.Sexo}        Sintoma: {String.Join(", ", paciente.Sintomas)}");
+        }
+        catch (AppException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return;
+        }
+    }
+
+    public void ListarPacientesSexo(string sexo)
+    {
+        try
+        {
+            var listaPacientes = Pacientes.Where(p => p.Sexo == sexo.ToUpper()).ToList();
+
+            if (!listaPacientes.Any())
+                throw new AppException("\nNenhum paciente encontrado com o sexo informado.");
+
+            foreach (var paciente in listaPacientes)
+                Console.WriteLine($"Paciente: {paciente.Nome}       Data de Nascimento: {paciente.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {paciente.Cpf}     Sexo: {paciente.Sexo}        Sintoma: {String.Join(", ", paciente.Sintomas)}");
+        }
+        catch (AppException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return;
+        }
+    }
+
+    public void ListarPacientesOrdemAlfabetica()
+    {
+        try
+        {
+            var listaPacientes = Pacientes.OrderBy(p => p.Nome).ToList();
+
+            if (!listaPacientes.Any())
+                throw new AppException("\nNenhum paciente encontrado com o sexo informado.");
+
+            foreach (var paciente in listaPacientes)
+                Console.WriteLine($"Paciente: {paciente.Nome}       Data de Nascimento: {paciente.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {paciente.Cpf}     Sexo: {paciente.Sexo}        Sintoma: {String.Join(", ", paciente.Sintomas)}");
+        }
+        catch (AppException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return;
+        }
+    }
+
+    public void ListarPacientesSintoma(string sintoma)
+    {
+        try
+        {
+            var listaPacientes = Pacientes.Where(p => p.Sintomas.Contains(sintoma)).ToList();
+
+            if (!listaPacientes.Any())
+                throw new AppException("\nNenhum paciente encontrado com o sintoma informado.");
+
+            foreach (var paciente in listaPacientes)
+                Console.WriteLine($"Paciente: {paciente.Nome}       Data de Nascimento: {paciente.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {paciente.Cpf}     Sexo: {paciente.Sexo}        Sintoma: {String.Join(", ", paciente.Sintomas)}");
+        }
+        catch (AppException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return;
+        }
+    }
+
+    public void ListarPessoasMesAniversario(int mes)
+    {
+        try
+        {
+            if (mes <= 0 && mes >= 12)
+                throw new AppException("\nInforme um mês válido.");
+
+            var listaPessoas = new List<Pessoa>();
+            listaPessoas.AddRange(Pacientes.Where(p => p.DataDeNascimento.Month == mes));
+            listaPessoas.AddRange(Medicos.Where(p => p.DataDeNascimento.Month == mes));
+
+            listaPessoas.OrderBy(p => p.Nome);
+
+            if (!listaPessoas.Any())
+                throw new AppException("\nNenhum paciente ou médico encontrado nascido no mês informado.");
+
+            foreach (var pessoa in listaPessoas)
+                Console.WriteLine($"Nome: {pessoa.Nome}       Data de Nascimento: {pessoa.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {pessoa.Cpf}");
+        }
+        catch (AppException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return;
+        }
+    }
+
+    public void ListarAtendimentosAbertos()
+    {
+        try
+        {
+            var listaAtendimentos = Atendimentos.Where(a => a.Fim == null).OrderByDescending(a => a.Inicio);
+
+            if (!listaAtendimentos.Any())
+                throw new AppException("\nNenhum atendimento em aberto foi encontrado.");
+
+            foreach (var atendimento in listaAtendimentos)
+                Console.WriteLine($"Nº: {atendimento.IdAtendimento}     Paciente: {atendimento.Paciente.Nome}       Médico: {atendimento.Medico.Nome}      Suspeita Inicial: {atendimento.SuspeitaInicial}  Valor: R${atendimento.Valor}    Início: {atendimento.Inicio.ToString("dd/MM/yyyy HH:mm")}");
+        }
+        catch (AppException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return;
+        }
+    }
+
+    public void ListarMedicosAtendimento()
+    {
+        try
+        {
+            var atendimentosFinalizadosPorMedico = Atendimentos.Where(a => a.Fim.HasValue).GroupBy(a => a.Medico).Select(g => new { Medico = g.Key, QuantidadeAtendimentos = g.Count() }).OrderByDescending(m => m.QuantidadeAtendimentos);
+
+            var medicosComAtendimentos = atendimentosFinalizadosPorMedico.Select(m => m.Medico);
+            var medicosSemAtendimentos = Medicos.Except(medicosComAtendimentos).Select(m => new { Medico = m, QuantidadeAtendimentos = 0 });
+
+            var listaMedicos = atendimentosFinalizadosPorMedico.Concat(medicosSemAtendimentos);
+
+            if (!listaMedicos.Any())
+                throw new AppException("\nNenhum médico encontrado.");
+
+            foreach (var medico in listaMedicos)
+                Console.WriteLine($"Médico: {medico.Medico.Nome}       Data de Nascimento: {medico.Medico.DataDeNascimento.ToString("dd/MM/yyyy")}      CPF: {medico.Medico.Cpf}     CRM: {medico.Medico.Crm}  Qtd. Atendimentos: {medico.QuantidadeAtendimentos}");
+        }
+        catch (AppException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return;
+        }
+    }
+
+    public void ListarAtendimentosSuspeitaDiagnostico(string palavraChave)
+    {
+        try
+        {
+            var listaAtendimentos = Atendimentos.Where(a => a.DiagnosticoFinal.Contains(palavraChave) || a.SuspeitaInicial.Contains(palavraChave)).ToList();
+
+            if (!listaAtendimentos.Any())
+                throw new AppException("\nNenhum atendimento com esse sintoma ou diagnóstico foi encontrado.");
+
+            foreach (var atendimento in listaAtendimentos)
+                Console.WriteLine($"Nº: {atendimento.IdAtendimento}     Paciente: {atendimento.Paciente.Nome}       Médico: {atendimento.Medico.Nome}      Suspeita Inicial: {atendimento.SuspeitaInicial}");
+        }
+        catch (AppException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return;
+        }
+    }
+
+    public void ListarAtendimentosExame()
+    {
+        try
+        {
+            var listaAtendimentos = Atendimentos.SelectMany(a => a.Resultado.Select(r => r.Item2)).GroupBy(e => e).OrderByDescending(g => g.Count()).Take(10);
+
+            if (!listaAtendimentos.Any())
+                throw new AppException("\nNenhum atendimento foi encontrado.");
+
+            foreach (var exame in listaAtendimentos)
+                Console.WriteLine($"Exame: {exame.Key.Titulo}   Descrição: {exame.Key.Descricao}     Valor: R${exame.Key.Valor}     Qtd.: {exame.Count()}");
+        }
+        catch (AppException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return;
+        }
+    }
+
     class AppException : Exception
     {
         public AppException(string message) : base(message)
@@ -467,4 +559,3 @@ public class App
         }
     }
 }
-
