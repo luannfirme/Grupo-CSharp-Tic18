@@ -98,13 +98,8 @@ namespace Prova_grupo.Data
                 return pacientesOrdenadosMesNasci;
             }else{
                 throw new InvalidOperationException($"Pacientes do {mes} não encontrado");
-            } 
-
-        // foreach (var paciente in pacientesOrdenadosMesNasci) {
-        //     Console.WriteLine($"--Paciente--: \nCPF: {paciente.CPF}, \nNome: {paciente.Nome}, \nDataNasc: {paciente.DataNascimento}, \nSexo: {paciente.Sexo}, \nSintomas: {paciente.Sintomas}, \n");
-        // }    
-}
-        
+            }  
+        }        
 
 
     }

@@ -66,5 +66,26 @@ namespace Prova_grupo.Service{
                 return medicoId;
             }
         }
+
+         public string BuscaMedicoPorMesNascimento(int mes){
+            var bulder = new StringBuilder();
+            var medicoPorMesNascimento = medicoRepositorio. ImprimiPorMesNscimentoMedico(mes);
+            var tamanhoLista = medicoPorMesNascimento.Count;
+
+            if(tamanhoLista ==0){
+                return bulder.Append("Lista vazia!").ToString();
+            }else{
+                Console.WriteLine($"Medico do mês de {mes}:");
+                foreach(Medico medico in medicoPorMesNascimento){
+                    bulder.AppendLine($"Id: {medico.Id}, \nCPF: {medico.CPF}, \nNome: {medico.Nome}, \nDataNasc: {medico.DataNascimento.ToString("dd/MM/yyyy")}, \nCRM: {medico.CRM}");
+                }
+                return bulder.ToString();               
+            }
+        }
+
+
+
+
+
     }
 }

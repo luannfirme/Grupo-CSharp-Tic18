@@ -50,6 +50,17 @@ namespace Prova_grupo.Data{
         }
 
 
+        public List<Medico> ImprimiPorMesNscimentoMedico(int mes) {
+            var medicosOrdenadosMesNasci = medicoList.OrderBy(p => p.DataNascimento.Month == mes).ToList();
+
+            if(medicosOrdenadosMesNasci  != null){
+                return medicosOrdenadosMesNasci;
+            }else{
+                throw new InvalidOperationException($"Médicos do {mes} não encontrado");
+            }  
+        } 
+
+
     }
     
 

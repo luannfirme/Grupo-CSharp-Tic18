@@ -28,7 +28,7 @@ namespace Prova_grupo.Apresentacao{
 
         public void Menu(MedicoService medicoService, PacienteService pacienteService){
             string operador = String.Empty;
-
+            Console.Clear();
             while(operador!="0"){
                 Console.WriteLine("1 -Adicionar um novo Medico");
                 Console.WriteLine("2 -Listar todos os Medicos");
@@ -40,6 +40,10 @@ namespace Prova_grupo.Apresentacao{
                 Console.WriteLine("7 -Gerar Relatorio de  entre a idade Minima e Maxima do paciente");
                 Console.WriteLine("8 -Listar Pacientes pelo sexo");
                 Console.WriteLine("9 -Listar Pacientes pelos sintomas");
+                Console.WriteLine("10 -Buscar Pacientes pelo mês de nascimento");
+                Console.WriteLine("11 -Buscar Médico pelo mês de nascimento");
+
+
                 operador = Console.ReadLine()!;
 
                 switch(operador){
@@ -132,6 +136,27 @@ namespace Prova_grupo.Apresentacao{
                         Console.WriteLine(response09);
                         Console.WriteLine("---------------------");
                         break;
+
+
+                    case "10":
+                        Console.WriteLine("Digite o mês de busca.");
+                        int mesPaciente = int.Parse(Console.ReadLine()!);
+
+                        var response10 = pacienteService.BuscaPacientePorMesNascimento(mesPaciente);
+                        Console.WriteLine(response10);
+                        Console.WriteLine("---------------------");
+
+                        break;
+
+                    case "11":
+                        Console.WriteLine("Digite o mês de busca.");
+                        int mesMedico = int.Parse(Console.ReadLine()!);
+
+                        var response11 = medicoService.BuscaMedicoPorMesNascimento(mesMedico);
+                        Console.WriteLine(response11);
+                        Console.WriteLine("---------------------");
+
+                        break;
                     case "0":
                         break;
                     default:
@@ -146,6 +171,7 @@ namespace Prova_grupo.Apresentacao{
 
 
         public void MenuApresentacao(MedicoService medicoService, PacienteService pacienteService){
+            Console.Clear();
 
             const int TAM_LIST_MAIS_USADOS = 10;
             
@@ -265,9 +291,11 @@ namespace Prova_grupo.Apresentacao{
             }
             if (operador == "0"){
                     MenuDeServicos(medicoService, pacienteService);
+                    
             }
         }
         public void MenuDeServicos(MedicoService medicoService, PacienteService pacienteService){
+            Console.Clear();
             MedicoPacienteApresentacao medicoPacienteApresentacao = new MedicoPacienteApresentacao();
 
             string operador = String.Empty;
@@ -295,6 +323,7 @@ namespace Prova_grupo.Apresentacao{
             }
             if (operador == "0"){
                     MenuDeServicos(medicoService, pacienteService);
+                    Console.Clear();
                 }
 
 
