@@ -21,6 +21,12 @@ public class Atendimento
         Inicio = dataInicial;
     }
 
+    public void VincularExame(string resultado, Exame exame)
+    {
+        Resultado.Add((resultado, exame));
+        Valor += exame.Valor;
+    }
+
     public void FecharAtendimento(string diagnostico, DateTime dataFinal)
     {
         DiagnosticoFinal = diagnostico;

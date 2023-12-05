@@ -5,8 +5,9 @@ public class App
     private List<Atendimento> Atendimentos = new List<Atendimento>();
     private List<Medico> Medicos = new List<Medico>();
     private List<Paciente> Pacientes = new List<Paciente>();
+    private List<Exame> Exames = new List<Exame>();
 
-    public static void Menu()
+    public static void MenuPrincipal()
     {
         var app = new App();
 
@@ -17,11 +18,12 @@ public class App
             Console.WriteLine("");
             Console.WriteLine("------- MENU -------");
             Console.WriteLine("1 - INICIAR ATENDIMENTO");
-            Console.WriteLine("2 - FINALIZAR ATENDIMENTO");
-            Console.WriteLine("3 - CADASTRAR MEDICO");
-            Console.WriteLine("4 - CADASTRAR PACIENTE");
-            Console.WriteLine("5 - CADASTRAR EXAME");
-            Console.WriteLine("6 - GERAR RELATÓRIO");
+            Console.WriteLine("2 - ATUALIZAR ATENDIMENTO");
+            Console.WriteLine("3 - FINALIZAR ATENDIMENTO");
+            Console.WriteLine("4 - CADASTRAR MEDICO");
+            Console.WriteLine("5 - CADASTRAR PACIENTE");
+            Console.WriteLine("6 - CADASTRAR EXAME");
+            Console.WriteLine("7 - GERAR RELATÓRIO");
             Console.WriteLine("0 - SAIR");
             Console.Write("Escolha uma opção: ");
             string escolha = Console.ReadLine();
@@ -33,16 +35,22 @@ public class App
                     app.IniciarAtendimento();
                     break;
                 case "2":
-                    app.FinalizarAtendimento();
+                    app.AtualizarAtendimento();
                     break;
                 case "3":
-                    app.CadastrarMedico();
+                    app.FinalizarAtendimento();
                     break;
                 case "4":
-                    app.CadastrarPaciente();
+                    app.CadastrarMedico();
                     break;
                 case "5":
-                    app.CadastrarExame();;
+                    app.CadastrarPaciente();
+                    break;
+                case "6":
+                    app.CadastrarExame(); ;
+                    break;
+                case "7":
+                    MenuRelatorios(app); ;
                     break;
                 case "0":
                     Console.Write("Aplicação encerrada...");
@@ -55,7 +63,88 @@ public class App
         }
     }
 
-     public void CadastrarMedico()
+    public static void MenuRelatorios(App app)
+    {
+        bool sair = false;
+        while (!sair)
+        {
+            Console.WriteLine("");
+            Console.WriteLine("------- RELÓRIOS -------");
+            Console.WriteLine("1. Médicos com idade entre dois valores");
+            Console.WriteLine("2- Pacientes com idade entre dois valores");
+            Console.WriteLine("3- Pacientes do sexo informado pelo usuário");
+            Console.WriteLine("4- Pacientes em ordem alfabética");
+            Console.WriteLine("5- Pacientes cujos sintomas contenha texto informado");
+            Console.WriteLine("6- Médicos e Pacientes aniversariantes do mês informado");
+            Console.WriteLine("7- Atendimentos em aberto");
+            Console.WriteLine("8- Médicos por atendimentos concluídos");
+            Console.WriteLine("9- Atendimento cuja suspeita ou diagnostico contenha texto informado");
+            Console.WriteLine("10- Top 10 atendimentos mais utilizados");
+            Console.WriteLine("0- voltar");
+            Console.Write("Escolha uma opção: ");
+            string escolha = Console.ReadLine();
+
+            switch (escolha)
+            {
+                case "1":
+                    Console.Write("Informe a idade incial do médico: ");
+                    int medicoInicial = int.Parse(Console.ReadLine());
+                    Console.Write("Informe a idade final do médico: ");
+                    int medicoFinal = int.Parse(Console.ReadLine());
+                    var listaMedicos = app.Medicos.Where(p => p.DataDeNascimento >= DateTime.Today.AddYears(-medicoInicial) && p.DataDeNascimento <= DateTime.Today.AddYears(-medicoFinal)).ToList();
+                    Console.Write("\nPressione qualquer tecla para continuar...");
+                    Console.ReadKey();
+                    break;
+                case "2":
+                    Console.Write("Informe a idade incial do paciente: ");
+                    int pacienteInicial = int.Parse(Console.ReadLine());
+                    Console.Write("Informe a idade final do paciente: ");
+                    int pacienteFinal = int.Parse(Console.ReadLine());
+                    app.obterPacientesIntevaloIdade(pacienteInicial, pacienteFinal);
+                    Console.Write("\nPressione qualquer tecla para continuar...");
+                    Console.ReadKey();
+                    break;
+                case "3":
+                        Console.Write("Informe o sexo do paciente: ");
+                        string sexo = Console.ReadLine();
+                        app.obterPacientesPorSexo(sexo);
+                        Console.Write("\nPressione qualquer tecla para continuar...");
+                        Console.ReadKey();
+                        break;
+                    break;
+                case "4":
+                    app.obterPacientesPorOrdemAlfabetica();
+                    Console.Write("\nPressione qualquer tecla para continuar...");
+                    Console.ReadKey();
+                    break;
+                case "5":
+                    Console.Write("Informe o Sintoma que deseja buscar: ");
+                    string sintoma = Console.ReadLine();
+                    app.obterPacientesPorSintomas(sintoma);
+                    Console.Write("\nPressione qualquer tecla para continuar...");
+                    Console.ReadKey();
+                    break;
+                case "6":
+                    Console.Write("Informe o mês de aniversário (entre 1 e 12): ");
+                    int mesAniversario = int.Parse(Console.ReadLine());
+                    if (mesAniversario >= 1 && mesAniversario <= 12)
+                    {
+                        app.obterAniversariantesPorMes(mesAniversario);
+                        Console.Write("\nPressione qualquer tecla para continuar...");
+                        Console.ReadKey();
+                    }
+                    break;
+                case "0":
+                    sair = true;
+                    break;
+                default:
+                    Console.WriteLine("Opção inválida!");
+                    break;
+            }
+        }
+    }
+
+    public void CadastrarMedico()
     {
         try
         {
@@ -165,7 +254,42 @@ public class App
         }
     }
 
-    public void CadastrarExame(){
+    public void CadastrarExame()
+    {
+        try
+        {
+            Console.WriteLine("\nCadastro de Novo Exame:");
+
+            Console.Write("Exame: ");
+            string titulo = Console.ReadLine();
+
+            Console.Write("Valor: ");
+            float preco = float.Parse(Console.ReadLine());
+
+            Console.Write("Descrição: ");
+            string descricao = Console.ReadLine();
+
+            Console.Write("Local: ");
+            string local = Console.ReadLine();
+
+            Exame exame = new Exame()
+            {
+                Titulo = titulo,
+                Valor = preco,
+                Descricao = descricao,
+                Local = local
+            };
+
+            Exames.Add(exame);
+
+            Console.WriteLine("\nExame cadastrado com sucesso!");
+
+        }
+        catch (AppException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return;
+        }
 
     }
 
@@ -181,7 +305,7 @@ public class App
 
             Medico medico = Medicos.FirstOrDefault(m => m.Crm == crm);
 
-            if(medico == null)
+            if (medico == null)
                 throw new AppException("\nMédico não encontrado.");
 
             Console.Write("Informe o CPF do paciente: ");
@@ -189,7 +313,7 @@ public class App
 
             Paciente paciente = Pacientes.FirstOrDefault(p => p.Cpf == cpf);
 
-            if(paciente == null)
+            if (paciente == null)
                 throw new AppException("\nPaciente não encontrado.");
 
             if (!ValidarAtendimento(medico, paciente))
@@ -198,7 +322,7 @@ public class App
             Console.Write("Informe a suspeita inicial: ");
             string suspeita = Console.ReadLine();
 
-            if(string.IsNullOrWhiteSpace(suspeita))
+            if (string.IsNullOrWhiteSpace(suspeita))
                 throw new AppException("\nA suspeita inicial é obrigatória.");
 
             Atendimento novoAtendimento = new Atendimento(id, medico, paciente, suspeita, dataInicial);
@@ -232,11 +356,47 @@ public class App
             Console.Write("Informe o diagnóstico final: ");
             string diagnostico = Console.ReadLine();
 
-            if(string.IsNullOrWhiteSpace(diagnostico))
+            if (string.IsNullOrWhiteSpace(diagnostico))
                 throw new AppException("\no diagnóstico final é obrigatório.");
 
             atendimentoEmCurso.FecharAtendimento(diagnostico, dataFinal);
             Console.WriteLine("Atendimento finalizado com sucesso.");
+        }
+        catch (AppException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return;
+        }
+    }
+
+    public void AtualizarAtendimento()
+    {
+        try
+        {
+            Console.Write("Informe o Nº do atendimento: ");
+            int atendimentoId = int.Parse(Console.ReadLine());
+
+            Atendimento atendimentoEmCurso = Atendimentos.FirstOrDefault(a => a.IdAtendimento == atendimentoId && a.Fim == null);
+
+            if (atendimentoEmCurso == null)
+                throw new AppException("\nNão há atendimento em curso para esse médico e paciente.");
+
+            Console.Write("Informe o Exame realizado: ");
+            string titulo = Console.ReadLine();
+
+            Exame exameRealizado = Exames.FirstOrDefault(e => e.Titulo == titulo);
+
+            if (exameRealizado == null)
+                throw new AppException("\nNão há exames cadastrados com o título informado.");
+
+            Console.Write("Informe o resultado do exame: ");
+            string resultado = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(resultado))
+                throw new AppException("\no resultado é obrigatório.");
+
+            atendimentoEmCurso.VincularExame(resultado, exameRealizado);
+            Console.WriteLine("Atendimento atualizado com sucesso.");
         }
         catch (AppException ex)
         {
