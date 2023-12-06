@@ -332,6 +332,9 @@ namespace TechMedClinic
 
                 clinica.IniciarAtendimento(atendimento1);
                 clinica.FinalizarAtendimento(atendimento1, "Gastrite");
+
+                clinica.GerarRelatorioMedicosIdade(30, 50);
+                clinica.GerarRelatorioPacientesIdade(18, 40);
                 clinica.GerarRelatorioPacientesSexo(Sexo.Masculino);
                 clinica.GerarRelatorioPacientesOrdemAlfabetica();
                 clinica.GerarRelatorioPacientesPorSintomas("Dor");
@@ -348,5 +351,3 @@ namespace TechMedClinic
         }
     }
 }
-
-
