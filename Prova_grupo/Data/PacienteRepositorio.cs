@@ -120,5 +120,15 @@ namespace Prova_grupo.Data
                 throw new InvalidOperationException($"Pacientes com ID: {id} não encontrado");
             }
         }
+
+        public void addPlano(int id, PlanoDeSaude plano)
+        {
+            var paciente = pacienteList.FirstOrDefault(p => p.IdPaciente == id);
+            if(paciente  == null){
+                paciente.PlanoPaciente = plano;
+            }else{
+                throw new InvalidOperationException($"Pacientes com ID: {id} não encontrado");
+            }
+        }
     }
 }

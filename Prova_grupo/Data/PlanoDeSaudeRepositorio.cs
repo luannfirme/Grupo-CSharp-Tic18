@@ -1,7 +1,7 @@
 using Prova_grupo.Domain;
 
 namespace Prova_grupo.Data{
-    public class MedicoPlanoDeSaudeRepositorioRepositorio
+    public class PlanoDeSaudeRepositorio
     {
         private List<PlanoDeSaude> planoList = new List<PlanoDeSaude>();
         public List<PlanoDeSaude> CadastrarPlano(PlanoDeSaude plano){

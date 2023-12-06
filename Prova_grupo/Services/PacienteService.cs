@@ -7,6 +7,7 @@ namespace Prova_grupo.Service
     public class PacienteService
     {
         PacienteRepositorio pacienteRepositorio = new PacienteRepositorio();
+        PlanoDeSaudeRepositorio planoRepositorio = new PlanoDeSaudeRepositorio();
 
         public string AddPaciente(string nome, DateTime dataNascPaciente, string cpfPaciente, string sexo, List<string> sintomas)
         {
@@ -232,6 +233,22 @@ namespace Prova_grupo.Service
                     bulder.AppendLine($"Data:{pagamento.Data.ToString("dd/MM/yyyy HH:mm")}  Valor: R${pagamento.Valor}  Desconto: R${pagamento.Desconto}");
                 }
                 return bulder.ToString();
+            }
+        }
+
+        public string addPlano(string cpf, string planoTitulo)
+        {
+            var paciente = pacienteRepositorio.BuscaPaciPorCpf(cpf);
+            var plano = planoRepositorio.BuscaPorTitulo(planoTitulo);
+
+            if (paciente == null || plano == null)
+            {
+                throw new ArgumentException("Paciente não encontrado", nameof(paciente));
+            }
+            else
+            {
+                pacienteRepositorio.addPlano(paciente.IdPaciente, plano);
+                return "Paciente atualziado com sucesso!";
             }
         }
     }

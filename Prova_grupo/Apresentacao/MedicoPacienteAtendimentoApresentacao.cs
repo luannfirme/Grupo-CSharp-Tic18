@@ -181,10 +181,12 @@ namespace Prova_grupo.Apresentacao
         }
 
 
-        public void MenuApresentacao(MedicoService medicoService, PacienteService pacienteService)
+        public void MenuPagamento(MedicoService medicoService, PacienteService pacienteService)
         {
             Console.Clear();
 
+            PlanoDeSaudeService planoService = new PlanoDeSaudeService();
+            
             string operador = String.Empty;
 
             while (operador != "0")
@@ -253,6 +255,24 @@ namespace Prova_grupo.Apresentacao
                         Console.WriteLine(response14);
                         Console.WriteLine("---------------------");
                         break;
+                    case "3":
+                        Console.WriteLine("Digite o Nome do plano:");
+                        string titulo =  Console.ReadLine()!;
+                        Console.WriteLine("Digite o valor do plano:");
+                        double valor =  double.Parse(Console.ReadLine());
+                        var response16 = planoService.AddPlano(titulo, valor);
+                        Console.WriteLine(response16);
+                        Console.WriteLine("---------------------");
+                        break;
+                    case "4":
+                        Console.WriteLine("Digite o CPF do Paciente:");
+                        string response17 =  Console.ReadLine()!;
+                        Console.WriteLine("Digite o Nome do plano:");
+                        string response18 =  Console.ReadLine()!;
+                        var response19 = pacienteService.addPlano(response18, response18);
+                        Console.WriteLine(response19);
+                        Console.WriteLine("---------------------");
+                        break;
                     case "0":
                         break;
                     default:
@@ -267,7 +287,7 @@ namespace Prova_grupo.Apresentacao
             }
         }
 
-        public void MenuPagamento(MedicoService medicoService, PacienteService pacienteService)
+        public void MenuApresentacao(MedicoService medicoService, PacienteService pacienteService)
         {
             Console.Clear();
 
