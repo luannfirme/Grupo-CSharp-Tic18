@@ -76,6 +76,47 @@ namespace TechMedClinic
             Exames = new List<Exame>();
             Atendimentos = new List<Atendimento>();
         }
+
+        public void AdicionarMedico(Medico medico)
+        {
+            Medicos.Add(medico);
+        }
+
+        public void RemoverMedico(Medico medico)
+        {
+            Medicos.Remove(medico);
+        }
+
+        public void AdicionarPaciente(Paciente paciente)
+        {
+            Pacientes.Add(paciente);
+        }
+
+        public void RemoverPaciente(Paciente paciente)
+        {
+            Pacientes.Remove(paciente);
+        }
+
+        public void AdicionarExame(Exame exame)
+        {
+            Exames.Add(exame);
+        }
+
+        public void RemoverExame(Exame exame)
+        {
+            Exames.Remove(exame);
+        }
+
+        public void IniciarAtendimento(Atendimento atendimento)
+        {
+            Atendimentos.Add(atendimento);
+        }
+
+        public void FinalizarAtendimento(Atendimento atendimento)
+        {
+            Atendimentos.Remove(atendimento);
+        }
+
     }
 
     class Program
