@@ -4,41 +4,79 @@ using System.Linq;
 
 namespace TechMedClinic
 {
+    public enum Sexo
+    {
+        Masculino,
+        Feminino
+    }
+
     public class Pessoa
     {
-        public string Nome { get; set; }
-        public DateTime DataNascimento { get; set; }
-        public string CPF { get; set; }
+        private string cpf;
+
+        public string Nome { get; private set; }
+        public DateTime DataNascimento { get; private set; }
+        public string CPF
+        {
+            get => cpf;
+            private set
+            {
+                if (value.Length == 11)
+                {
+                    cpf = value;
+                }
+                else
+                {
+                    throw new ArgumentException("O CPF deve ter 11 dígitos.");
+                }
+            }
+        }
 
         public Pessoa(string nome, DateTime dataNascimento, string cpf)
         {
+            this.cpf = string.Empty;
             Nome = nome;
             DataNascimento = dataNascimento;
             CPF = cpf;
+        }
+
+        public virtual void Apresentar()
+        {
+            Console.WriteLine($"Nome: {Nome}, Data de Nascimento: {DataNascimento.ToShortDateString()}, CPF: {CPF}");
+        }
+    }
+
+    public class Paciente : Pessoa
+    {
+        public Sexo Sexo { get; private set; }
+        public List<string> Sintomas { get; private set; }
+
+        public Paciente(string nome, DateTime dataNascimento, string cpf, Sexo sexo, List<string> sintomas)
+            : base(nome, dataNascimento, cpf)
+        {
+            Sexo = sexo;
+            Sintomas = sintomas;
+        }
+
+        public override void Apresentar()
+        {
+            Console.WriteLine($"Paciente - Sexo: {Sexo}, {base.Nome}, {base.DataNascimento.ToShortDateString()}, CPF: {base.CPF}, Sintomas: {string.Join(", ", Sintomas)}");
         }
     }
 
     public class Medico : Pessoa
     {
-        public string CRM { get; set; }
+        public string CRM { get; private set; }
 
         public Medico(string nome, DateTime dataNascimento, string cpf, string crm)
             : base(nome, dataNascimento, cpf)
         {
             CRM = crm;
         }
-    }
 
-    public class Paciente : Pessoa
-    {
-        public string Sexo { get; set; }
-        public List<string> Sintomas { get; set; }
-
-        public Paciente(string nome, DateTime dataNascimento, string cpf, string sexo, List<string> sintomas)
-            : base(nome, dataNascimento, cpf)
+        public override void Apresentar()
         {
-            Sexo = sexo;
-            Sintomas = sintomas;
+            Console.WriteLine($"Médico - CRM: {CRM}, {base.Nome}, {base.DataNascimento.ToShortDateString()}, CPF: {base.CPF}");
         }
     }
 
@@ -64,57 +102,98 @@ namespace TechMedClinic
 
     public class ClinicaTechMed
     {
-        public List<Medico> Medicos { get; set; }
-        public List<Paciente> Pacientes { get; set; }
-        public List<Exame> Exames { get; set; }
-        public List<Atendimento> Atendimentos { get; set; }
+        private List<Medico> medicos;
+        private List<Paciente> pacientes;
+        private List<Exame> exames;
+        private List<Atendimento> atendimentos;
 
         public ClinicaTechMed()
         {
-            Medicos = new List<Medico>();
-            Pacientes = new List<Paciente>();
-            Exames = new List<Exame>();
-            Atendimentos = new List<Atendimento>();
+            medicos = new List<Medico>();
+            pacientes = new List<Paciente>();
+            exames = new List<Exame>();
+            atendimentos = new List<Atendimento>();
         }
 
         public void AdicionarMedico(Medico medico)
         {
-            Medicos.Add(medico);
+            medicos.Add(medico);
         }
 
         public void RemoverMedico(Medico medico)
         {
-            Medicos.Remove(medico);
+            medicos.Remove(medico);
         }
 
         public void AdicionarPaciente(Paciente paciente)
         {
-            Pacientes.Add(paciente);
+            pacientes.Add(paciente);
         }
 
         public void RemoverPaciente(Paciente paciente)
         {
-            Pacientes.Remove(paciente);
+            pacientes.Remove(paciente);
         }
 
         public void AdicionarExame(Exame exame)
         {
-            Exames.Add(exame);
+            exames.Add(exame);
         }
 
         public void RemoverExame(Exame exame)
         {
-            Exames.Remove(exame);
+            exames.Remove(exame);
         }
 
         public void IniciarAtendimento(Atendimento atendimento)
         {
-            Atendimentos.Add(atendimento);
+            atendimento.Inicio = DateTime.Now;
+            atendimentos.Add(atendimento);
         }
 
-        public void FinalizarAtendimento(Atendimento atendimento)
+        public void FinalizarAtendimento(Atendimento atendimento, string diagnosticoFinal)
         {
-            Atendimentos.Remove(atendimento);
+            atendimento.Fim = DateTime.Now;
+            atendimento.DiagnosticoFinal = diagnosticoFinal;
+        }
+
+        public void GerarRelatorioMedicosIdade(int idadeMinima, int idadeMaxima)
+        {
+            var medicosFiltrados = medicos.Where(medico =>
+                (DateTime.Now.Year - medico.DataNascimento.Year) >= idadeMinima &&
+                (DateTime.Now.Year - medico.DataNascimento.Year) <= idadeMaxima);
+
+            Console.WriteLine($"\nRelatório de Médicos com idade entre {idadeMinima} e {idadeMaxima} anos:");
+            foreach (var medico in medicosFiltrados)
+            {
+                medico.Apresentar();
+            }
+        }
+
+        public void GerarRelatorioPacientesIdade(int idadeMinima, int idadeMaxima)
+        {
+            var pacientesFiltrados = pacientes.Where(paciente =>
+                (DateTime.Now.Year - paciente.DataNascimento.Year) >= idadeMinima &&
+                (DateTime.Now.Year - paciente.DataNascimento.Year) <= idadeMaxima);
+
+            Console.WriteLine($"\nRelatório de Pacientes com idade entre {idadeMinima} e {idadeMaxima} anos:");
+            foreach (var paciente in pacientesFiltrados)
+            {
+                paciente.Apresentar();
+            }
+        }
+
+        public void GerarRelatorioAniversariantesDoMes(int mes)
+        {
+            var aniversariantes = medicos.Concat<Pessoa>(pacientes)
+                .Where(p => p.DataNascimento.Month == mes)
+                .OrderBy(p => p.DataNascimento.Day);
+
+            Console.WriteLine($"\nRelatório de Aniversariantes do mês {mes}:");
+            foreach (var pessoa in aniversariantes)
+            {
+                pessoa.Apresentar();
+            }
         }
 
     }
@@ -123,6 +202,50 @@ namespace TechMedClinic
     {
         static void Main()
         {
+            try
+            {
+                ClinicaTechMed clinica = new ClinicaTechMed();
+
+                Medico medico1 = new Medico("Dr. Murilo", new DateTime(1992, 12, 3), "12345678901", "CRM12345");
+                Medico medico2 = new Medico("Dr. Carlos", new DateTime(1995, 3, 11), "54398432109", "CRM65421");
+                Medico medico3 = new Medico("Dra. Maria", new DateTime(1985, 11, 10), "98765432109", "CRM54321");
+                Medico medico4 = new Medico("Dra. Carla", new DateTime(1991, 4, 7), "82514276598", "CRM73416");
+
+                Paciente paciente1 = new Paciente("Goku", new DateTime(2001, 11, 1), "11223344556", Sexo.Masculino, new List<string> { "Enjoo" });
+                Paciente paciente2 = new Paciente("Naruto", new DateTime(1988, 9, 16), "99352466554", Sexo.Masculino, new List<string> { "Dor de barriga" });
+
+                Exame exame1 = new Exame { Titulo = "Hemograma", Valor = 80.0f, Descricao = "Exame de sangue", Local = "Laboratório ABC" };
+
+                Atendimento atendimento1 = new Atendimento
+                {
+                    SuspeitaInicial = "Gastrite",
+                    ListaExamesResultado = new List<(Exame, string)> { (exame1, "Normal") },
+                    Valor = 150.0f,
+                    MedicoResponsavel = medico1,
+                    Paciente = paciente1
+                };
+
+                clinica.AdicionarMedico(medico1);
+                clinica.AdicionarMedico(medico2);
+                clinica.AdicionarMedico(medico3);
+                clinica.AdicionarMedico(medico4);
+
+                clinica.AdicionarPaciente(paciente1);
+                clinica.AdicionarPaciente(paciente2);
+
+                clinica.AdicionarExame(exame1);
+
+                clinica.IniciarAtendimento(atendimento1);
+                clinica.FinalizarAtendimento(atendimento1, "Gastrite");
+
+                clinica.GerarRelatorioMedicosIdade(30, 50);
+                clinica.GerarRelatorioPacientesIdade(18, 40);
+                clinica.GerarRelatorioAniversariantesDoMes(12);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro: {ex.Message}");
+            }
         }
     }
 }
