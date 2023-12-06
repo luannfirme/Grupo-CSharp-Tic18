@@ -5,7 +5,7 @@ namespace Prova_grupo.Domain{
     public string Sexo{get; set;}
     public PlanoDeSaude PlanoPaciente { get; set; }
     public List<string> Sintomas{get; set;}
-    public List<Pagamento> Pagamentos { get; set; }
+    public List<Pagamento> Pagamentos { get; set; } = new List<Pagamento>();
 
         public Paciente(int idPaciente, string nome, DateTime dataNascimento, string cpf, string sexo, List<string> sintomas)
             : base(nome, dataNascimento, cpf){

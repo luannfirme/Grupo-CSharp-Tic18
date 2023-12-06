@@ -13,5 +13,18 @@ namespace Prova_grupo.Service
             planoRepositorio.CadastrarPlano(new PlanoDeSaude(titulo, valor));
             return "Plano adicionado com sucesso!";
         }
+        public PlanoDeSaude BuscarPlanoPorTitulo(string nome)
+        {
+            var plano = planoRepositorio.BuscaPorTitulo(nome);
+
+            if (plano == null)
+            {
+                throw new ArgumentException("Plano não encontrado", nameof(nome));
+            }
+            else
+            {
+                return plano;
+            }
+        }
     }
 }

@@ -115,19 +115,19 @@ namespace Prova_grupo.Data
         {
             var paciente = pacienteList.FirstOrDefault(p => p.IdPaciente == id);
             if(paciente  == null){
-                paciente.Pagamentos.Add(pagamento);
-            }else{
                 throw new InvalidOperationException($"Pacientes com ID: {id} não encontrado");
+            }else{
+                paciente.Pagamentos.Add(pagamento);
             }
         }
 
         public void addPlano(int id, PlanoDeSaude plano)
         {
             var paciente = pacienteList.FirstOrDefault(p => p.IdPaciente == id);
-            if(paciente  == null){
-                paciente.PlanoPaciente = plano;
-            }else{
+            if(paciente  == null || plano == null){ 
                 throw new InvalidOperationException($"Pacientes com ID: {id} não encontrado");
+            }else{
+                paciente.PlanoPaciente = plano;
             }
         }
     }

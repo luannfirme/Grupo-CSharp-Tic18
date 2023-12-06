@@ -3,11 +3,9 @@ using Prova_grupo.Domain;
 using System.Text;
 
 namespace Prova_grupo.Service
-{
-    public class PacienteService
+{    public class PacienteService
     {
         PacienteRepositorio pacienteRepositorio = new PacienteRepositorio();
-        PlanoDeSaudeRepositorio planoRepositorio = new PlanoDeSaudeRepositorio();
 
         public string AddPaciente(string nome, DateTime dataNascPaciente, string cpfPaciente, string sexo, List<string> sintomas)
         {
@@ -230,25 +228,24 @@ namespace Prova_grupo.Service
                 bulder.AppendLine("Pagamentos:");
                 foreach (var pagamento in pacientePagamento.Pagamentos)
                 {
-                    bulder.AppendLine($"Data:{pagamento.Data.ToString("dd/MM/yyyy HH:mm")}  Valor: R${pagamento.Valor}  Desconto: R${pagamento.Desconto}");
+                    bulder.AppendLine($"Data:{pagamento.Data.ToString("dd/MM/yyyy HH:mm")}  Valor: R${pagamento.Valor}  Desconto: R${pagamento.Desconto} Forma: {pagamento.Tipo}");
                 }
                 return bulder.ToString();
             }
         }
 
-        public string addPlano(string cpf, string planoTitulo)
+        public string addPlano(string cpf, PlanoDeSaude plano)
         {
             var paciente = pacienteRepositorio.BuscaPaciPorCpf(cpf);
-            var plano = planoRepositorio.BuscaPorTitulo(planoTitulo);
 
-            if (paciente == null || plano == null)
+            if (paciente == null)
             {
                 throw new ArgumentException("Paciente não encontrado", nameof(paciente));
             }
             else
             {
                 pacienteRepositorio.addPlano(paciente.IdPaciente, plano);
-                return "Paciente atualziado com sucesso!";
+                return "Paciente atualizado com sucesso!";
             }
         }
     }

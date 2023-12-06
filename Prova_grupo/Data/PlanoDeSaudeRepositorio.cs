@@ -14,9 +14,9 @@ namespace Prova_grupo.Data{
         }
 
         public PlanoDeSaude BuscaPorTitulo(string titulo){
-            var medicoId = planoList.Find(p => p.Titulo == titulo);
-            if(medicoId != null){
-                return medicoId;
+            var plano = planoList.Find(p => p.Titulo == titulo);
+            if(plano != null){
+                return plano;
             }else{
                 throw new InvalidOperationException($"Plano de saúde com título {titulo} não encontrado");
             }

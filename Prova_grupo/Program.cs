@@ -8,11 +8,11 @@ namespace Prova_grupo{
 
             MedicoService medicoService = new MedicoService();
             PacienteService pacienteService = new PacienteService();
+            PlanoDeSaudeService planoDeSaudeService = new PlanoDeSaudeService();
+            AtendimentoService atendimentoService = new AtendimentoService();
 
+            medicoPacienteApresentacao.MenuDeServicos(medicoService, pacienteService, planoDeSaudeService, atendimentoService);
 
-            medicoPacienteApresentacao.MenuDeServicos(medicoService, pacienteService);
-
- 
         }
     }
 }

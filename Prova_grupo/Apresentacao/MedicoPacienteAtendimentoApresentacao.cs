@@ -32,7 +32,7 @@ namespace Prova_grupo.Apresentacao
 
         }
 
-        public void Menu(MedicoService medicoService, PacienteService pacienteService)
+        public void Menu(MedicoService medicoService, PacienteService pacienteService, PlanoDeSaudeService planoDeSaudeService, AtendimentoService atendimentoService)
         {
             string operador = String.Empty;
             Console.Clear();
@@ -50,6 +50,8 @@ namespace Prova_grupo.Apresentacao
                 Console.WriteLine("9 -Listar Pacientes pelos sintomas");
                 Console.WriteLine("10 -Buscar Pacientes pelo mês de nascimento");
                 Console.WriteLine("11 -Buscar Médico pelo mês de nascimento");
+                Console.WriteLine("----------------------------------------");
+                Console.WriteLine("0 -Voltar");
 
 
                 operador = Console.ReadLine()!;
@@ -176,16 +178,14 @@ namespace Prova_grupo.Apresentacao
             }
             if (operador == "0")
             {
-                MenuDeServicos(medicoService, pacienteService);
+                MenuDeServicos(medicoService, pacienteService, planoDeSaudeService, atendimentoService);
             }
         }
 
 
-        public void MenuPagamento(MedicoService medicoService, PacienteService pacienteService)
+        public void MenuPagamento(MedicoService medicoService, PacienteService pacienteService, PlanoDeSaudeService planoDeSaudeService, AtendimentoService atendimentoService)
         {
             Console.Clear();
-
-            PlanoDeSaudeService planoService = new PlanoDeSaudeService();
             
             string operador = String.Empty;
 
@@ -193,9 +193,12 @@ namespace Prova_grupo.Apresentacao
             {
                 Console.WriteLine("1 -Realizar Pagamento");
                 Console.WriteLine("2 -Listar Pagamentos de Pacientes");
-                Console.WriteLine("---------------------------------------------------------------");
+                Console.WriteLine("---------------------------------");
                 Console.WriteLine("3 -Cadastrar Plano");
                 Console.WriteLine("4 -Vincular Paciente");
+                Console.WriteLine("--------------------");
+                Console.WriteLine("0 -Voltar");
+
                 operador = Console.ReadLine()!;
 
                 switch (operador)
@@ -260,7 +263,7 @@ namespace Prova_grupo.Apresentacao
                         string titulo =  Console.ReadLine()!;
                         Console.WriteLine("Digite o valor do plano:");
                         double valor =  double.Parse(Console.ReadLine());
-                        var response16 = planoService.AddPlano(titulo, valor);
+                        var response16 = planoDeSaudeService.AddPlano(titulo, valor);
                         Console.WriteLine(response16);
                         Console.WriteLine("---------------------");
                         break;
@@ -269,7 +272,8 @@ namespace Prova_grupo.Apresentacao
                         string response17 =  Console.ReadLine()!;
                         Console.WriteLine("Digite o Nome do plano:");
                         string response18 =  Console.ReadLine()!;
-                        var response19 = pacienteService.addPlano(response17, response18);
+                        var plano = planoDeSaudeService.BuscarPlanoPorTitulo(response18);
+                        var response19 = pacienteService.addPlano(response17, plano);
                         Console.WriteLine(response19);
                         Console.WriteLine("---------------------");
                         break;
@@ -282,18 +286,16 @@ namespace Prova_grupo.Apresentacao
             }
             if (operador == "0")
             {
-                MenuDeServicos(medicoService, pacienteService);
+                MenuDeServicos(medicoService, pacienteService, planoDeSaudeService, atendimentoService);
 
             }
         }
 
-        public void MenuApresentacao(MedicoService medicoService, PacienteService pacienteService)
+        public void MenuApresentacao(MedicoService medicoService, PacienteService pacienteService, PlanoDeSaudeService planoDeSaudeService, AtendimentoService atendimentoService)
         {
             Console.Clear();
 
             const int TAM_LIST_MAIS_USADOS = 10;
-
-            AtendimentoService atendimentoService = new AtendimentoService();
 
 
             string operador = String.Empty;
@@ -306,6 +308,8 @@ namespace Prova_grupo.Apresentacao
                 Console.WriteLine("4 -Listar exames mais utilizados");
                 Console.WriteLine("5 -Listar Medicos por quantidade de atendimento concluido");
                 Console.WriteLine("6 -Finalizar atendimento");
+                Console.WriteLine("------------------------");
+                Console.WriteLine("0 -Voltar");
                 operador = Console.ReadLine()!;
 
                 switch (operador)
@@ -412,12 +416,12 @@ namespace Prova_grupo.Apresentacao
             }
             if (operador == "0")
             {
-                MenuDeServicos(medicoService, pacienteService);
+                MenuDeServicos(medicoService, pacienteService, planoDeSaudeService, atendimentoService);
 
             }
         }
 
-        public void MenuDeServicos(MedicoService medicoService, PacienteService pacienteService)
+        public void MenuDeServicos(MedicoService medicoService, PacienteService pacienteService, PlanoDeSaudeService planoDeSaudeService, AtendimentoService atendimentoService)
         {
             Console.Clear();
             MedicoPacienteApresentacao medicoPacienteApresentacao = new MedicoPacienteApresentacao();
@@ -435,13 +439,13 @@ namespace Prova_grupo.Apresentacao
                 switch (operador)
                 {
                     case "1":
-                        medicoPacienteApresentacao.Menu(medicoService, pacienteService);
+                        medicoPacienteApresentacao.Menu(medicoService, pacienteService, planoDeSaudeService, atendimentoService);
                         break;
                     case "2":
-                        medicoPacienteApresentacao.MenuApresentacao(medicoService, pacienteService);
+                        medicoPacienteApresentacao.MenuApresentacao(medicoService, pacienteService, planoDeSaudeService, atendimentoService);
                         break;
                     case "3":
-                        medicoPacienteApresentacao.MenuPagamento(medicoService, pacienteService);
+                        medicoPacienteApresentacao.MenuPagamento(medicoService, pacienteService, planoDeSaudeService, atendimentoService);
                         break;
                     case "0":
                         break;
@@ -452,7 +456,7 @@ namespace Prova_grupo.Apresentacao
             }
             if (operador == "0")
             {
-                MenuDeServicos(medicoService, pacienteService);
+                MenuDeServicos(medicoService, pacienteService, planoDeSaudeService, atendimentoService);
                 Console.Clear();
             }
         }
