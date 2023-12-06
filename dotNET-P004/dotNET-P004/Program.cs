@@ -183,6 +183,39 @@ namespace TechMedClinic
             }
         }
 
+        public void GerarRelatorioPacientesSexo(Sexo sexo)
+        {
+            var pacientesFiltrados = pacientes.Where(paciente => paciente.Sexo == sexo);
+
+            Console.WriteLine($"\nRelatório de Pacientes do sexo {sexo}:");
+            foreach (var paciente in pacientesFiltrados)
+            {
+                paciente.Apresentar();
+            }
+        }
+
+        public void GerarRelatorioPacientesOrdemAlfabetica()
+        {
+            var pacientesOrdenados = pacientes.OrderBy(paciente => paciente.Nome);
+
+            Console.WriteLine("\nRelatório de Pacientes em ordem alfabética:");
+            foreach (var paciente in pacientesOrdenados)
+            {
+                paciente.Apresentar();
+            }
+        }
+
+        public void GerarRelatorioPacientesPorSintomas(string textoSintomas)
+        {
+            var pacientesFiltrados = pacientes.Where(paciente => paciente.Sintomas.Contains(textoSintomas));
+
+            Console.WriteLine($"\nRelatório de Pacientes com sintomas contendo '{textoSintomas}':");
+            foreach (var paciente in pacientesFiltrados)
+            {
+                paciente.Apresentar();
+            }
+        }
+
         public void GerarRelatorioAniversariantesDoMes(int mes)
         {
             var aniversariantes = medicos.Concat<Pessoa>(pacientes)
@@ -196,6 +229,68 @@ namespace TechMedClinic
             }
         }
 
+        public void RelatorioAtendimentosEmAberto()
+        {
+            var atendimentosAbertos = atendimentos
+                .Where(atendimento => atendimento.Fim == DateTime.MinValue)
+                .OrderByDescending(atendimento => atendimento.Inicio);
+
+            Console.WriteLine("\nRelatório de Atendimentos em Aberto:");
+            foreach (var atendimento in atendimentosAbertos)
+            {
+                Console.WriteLine($"Paciente: {atendimento.Paciente.Nome}, Médico: {atendimento.MedicoResponsavel.Nome}, Início: {atendimento.Inicio}");
+            }
+        }
+
+        public void RelatorioMedicosQuantidadeAtendimentos()
+        {
+            var medicoAtendimentos = medicos
+                .Select(medico => new
+                {
+                    Medico = medico,
+                    QuantidadeAtendimentos = atendimentos.Count(atendimento => atendimento.MedicoResponsavel == medico && atendimento.Fim != DateTime.MinValue)
+                })
+                .OrderByDescending(entry => entry.QuantidadeAtendimentos);
+
+            Console.WriteLine("\nRelatório de Médicos em Ordem Decrescente da Quantidade de Atendimentos Concluídos:");
+            foreach (var entry in medicoAtendimentos)
+            {
+                Console.WriteLine($"Médico: {entry.Medico.Nome}, Quantidade de Atendimentos: {entry.QuantidadeAtendimentos}");
+            }
+        }
+
+        public void RelatorioAtendimentosPalavraChave(string palavraChave)
+        {
+            var atendimentosComPalavraChave = atendimentos
+                .Where(atendimento => atendimento.SuspeitaInicial.Contains(palavraChave) || atendimento.DiagnosticoFinal.Contains(palavraChave))
+                .OrderBy(atendimento => atendimento.Inicio);
+
+            Console.WriteLine($"\nRelatório de Atendimentos com a Palavra-chave '{palavraChave}':");
+            foreach (var atendimento in atendimentosComPalavraChave)
+            {
+                Console.WriteLine($"Paciente: {atendimento.Paciente.Nome}, Médico: {atendimento.MedicoResponsavel.Nome}, Início: {atendimento.Inicio}");
+            }
+        }
+
+        public void RelatorioTop10ExamesUtilizados()
+        {
+            var examesUtilizados = atendimentos
+                .SelectMany(atendimento => atendimento.ListaExamesResultado)
+                .GroupBy(entry => entry.Item1)
+                .Select(group => new
+                {
+                    Exame = group.Key,
+                    QuantidadeUtilizada = group.Count()
+                })
+                .OrderByDescending(entry => entry.QuantidadeUtilizada)
+                .Take(10);
+
+            Console.WriteLine("\nRelatório dos 10 Exames Mais Utilizados nos Atendimentos:");
+            foreach (var entry in examesUtilizados)
+            {
+                Console.WriteLine($"Exame: {entry.Exame.Titulo}, Quantidade Utilizada: {entry.QuantidadeUtilizada}");
+            }
+        }
     }
 
     class Program
@@ -237,10 +332,14 @@ namespace TechMedClinic
 
                 clinica.IniciarAtendimento(atendimento1);
                 clinica.FinalizarAtendimento(atendimento1, "Gastrite");
-
-                clinica.GerarRelatorioMedicosIdade(30, 50);
-                clinica.GerarRelatorioPacientesIdade(18, 40);
+                clinica.GerarRelatorioPacientesSexo(Sexo.Masculino);
+                clinica.GerarRelatorioPacientesOrdemAlfabetica();
+                clinica.GerarRelatorioPacientesPorSintomas("Dor");
                 clinica.GerarRelatorioAniversariantesDoMes(12);
+                clinica.RelatorioAtendimentosEmAberto();
+                clinica.RelatorioMedicosQuantidadeAtendimentos();
+                clinica.RelatorioAtendimentosPalavraChave("Gastrite");
+                clinica.RelatorioTop10ExamesUtilizados();
             }
             catch (Exception ex)
             {
@@ -249,3 +348,5 @@ namespace TechMedClinic
         }
     }
 }
+
+
