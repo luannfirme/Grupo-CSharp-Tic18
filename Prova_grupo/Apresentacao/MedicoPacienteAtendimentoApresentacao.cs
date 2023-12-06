@@ -195,7 +195,7 @@ namespace Prova_grupo.Apresentacao
                 Console.WriteLine("2 -Listar Pagamentos de Pacientes");
                 Console.WriteLine("---------------------------------------------------------------");
                 Console.WriteLine("3 -Cadastrar Plano");
-                Console.WriteLine("4 -Listar Pagamentos de Pacientes");
+                Console.WriteLine("4 -Vincular Paciente");
                 operador = Console.ReadLine()!;
 
                 switch (operador)
@@ -269,7 +269,7 @@ namespace Prova_grupo.Apresentacao
                         string response17 =  Console.ReadLine()!;
                         Console.WriteLine("Digite o Nome do plano:");
                         string response18 =  Console.ReadLine()!;
-                        var response19 = pacienteService.addPlano(response18, response18);
+                        var response19 = pacienteService.addPlano(response17, response18);
                         Console.WriteLine(response19);
                         Console.WriteLine("---------------------");
                         break;
