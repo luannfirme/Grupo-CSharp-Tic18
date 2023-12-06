@@ -1,9 +1,9 @@
-using System.Runtime.Serialization;
 using Prova_grupo.Domain;
+using Prova_grupo.Interfaces;
 
 namespace Prova_grupo.Data
 {
-    public class PacienteRepositorio: PessoaRepoitorio
+    public class PacienteRepositorio: PessoaRepoitorio, IPagamento
     {
         private List<Paciente> pacienteList = new List<Paciente>();
         private List<string> sintomas = new List<string> ();
@@ -91,6 +91,16 @@ namespace Prova_grupo.Data
             }                        
         }
 
+        public Paciente BuscaPaciPorCpf(string cpf){
+            
+            var buscaID = pacienteList.Find(p=>p.CPF == cpf);
+            if(buscaID  != null){
+                return buscaID ;
+            }else{
+                throw new InvalidOperationException($"Pacientes com CPF {cpf} não encontrado");
+            }                        
+        }
+
         public List<Paciente>  ImprimiPorMesNscimento(int mes) {
             var pacientesOrdenadosMesNasci = pacienteList.OrderBy(p => p.DataNascimento.Month == mes).ToList();
 
@@ -99,8 +109,16 @@ namespace Prova_grupo.Data
             }else{
                 throw new InvalidOperationException($"Pacientes do {mes} não encontrado");
             }  
-        }        
+        }
 
-
+        public void RealizarPagamento(int id, Pagamento pagamento)
+        {
+            var paciente = pacienteList.FirstOrDefault(p => p.IdPaciente == id);
+            if(paciente  == null){
+                paciente.Pagamentos.Add(pagamento);
+            }else{
+                throw new InvalidOperationException($"Pacientes com ID: {id} não encontrado");
+            }
+        }
     }
 }
