@@ -4,12 +4,6 @@ using System.Linq;
 
 namespace TechMedClinic
 {
-    public enum Sexo
-    {
-        Masculino,
-        Feminino
-    }
-
     public class Pessoa
     {
         private string cpf;
@@ -44,6 +38,12 @@ namespace TechMedClinic
         {
             Console.WriteLine($"Nome: {Nome}, Data de Nascimento: {DataNascimento.ToShortDateString()}, CPF: {CPF}");
         }
+    }
+
+    public enum Sexo
+    {
+        Masculino,
+        Feminino
     }
 
     public class Paciente : Pessoa
@@ -91,10 +91,10 @@ namespace TechMedClinic
     public class Atendimento
     {
         public DateTime Inicio { get; set; }
+        public DateTime Fim { get; set; }
         public string SuspeitaInicial { get; set; }
         public List<(Exame, string)> ListaExamesResultado { get; set; }
         public float Valor { get; set; }
-        public DateTime Fim { get; set; }
         public Medico MedicoResponsavel { get; set; }
         public Paciente Paciente { get; set; }
         public string DiagnosticoFinal { get; set; }
@@ -117,32 +117,31 @@ namespace TechMedClinic
 
         public void AdicionarMedico(Medico medico)
         {
-            medicos.Add(medico);
-        }
-
-        public void RemoverMedico(Medico medico)
-        {
-            medicos.Remove(medico);
+            if (!CRMJaExiste(medico.CRM))
+            {
+                medicos.Add(medico);
+            }
+            else
+            {
+                throw new ArgumentException($"Médico com CRM {medico.CRM} já cadastrado.");
+            }
         }
 
         public void AdicionarPaciente(Paciente paciente)
         {
-            pacientes.Add(paciente);
-        }
-
-        public void RemoverPaciente(Paciente paciente)
-        {
-            pacientes.Remove(paciente);
+            if (!CPFJaExiste(paciente.CPF))
+            {
+                pacientes.Add(paciente);
+            }
+            else
+            {
+                throw new ArgumentException($"Paciente com CPF {paciente.CPF} já cadastrado.");
+            }
         }
 
         public void AdicionarExame(Exame exame)
         {
             exames.Add(exame);
-        }
-
-        public void RemoverExame(Exame exame)
-        {
-            exames.Remove(exame);
         }
 
         public void IniciarAtendimento(Atendimento atendimento)
@@ -153,8 +152,23 @@ namespace TechMedClinic
 
         public void FinalizarAtendimento(Atendimento atendimento, string diagnosticoFinal)
         {
+            if (atendimento.Inicio > DateTime.Now)
+            {
+                throw new InvalidOperationException("A data final de um atendimento deve ser posterior à data inicial.");
+            }
+
             atendimento.Fim = DateTime.Now;
             atendimento.DiagnosticoFinal = diagnosticoFinal;
+        }
+
+        private bool CRMJaExiste(string crm)
+        {
+            return medicos.Any(medico => medico.CRM == crm);
+        }
+
+        private bool CPFJaExiste(string cpf)
+        {
+            return pacientes.Any(paciente => paciente.CPF == cpf);
         }
 
         public void GerarRelatorioMedicosIdade(int idadeMinima, int idadeMaxima)
